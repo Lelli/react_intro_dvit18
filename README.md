@@ -126,7 +126,7 @@ There is also an `onClick` event handler, where we log the click to the console.
 
 ![Snapshot of the app with props](./images/with_props.png)
 
-## Part 2 - Adding state
+## Part 3 - Adding state
 
 We want our app to be able to switch between places, so we can use state to keep that data in our App component.
 
@@ -176,4 +176,4 @@ class App extends Component {
 
 ![Snapshot of the weather app with changing state](./images/with_state.png)
 
-At this point, [your `App.js` file should look something like this](./snapshots/part2_props_state/index.js).
+At this point, [your `App.js` file should look something like this](./snapshots/part3_state/index.js).
