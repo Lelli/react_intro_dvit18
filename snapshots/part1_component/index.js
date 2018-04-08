@@ -32,7 +32,7 @@ class App extends Component {
             {place.name}
           </button>
         ))}
-        <WeatherDisplay id={"12345"} />
+        <WeatherDisplay cityId={"12345"} />
       </div>
     );
   }
