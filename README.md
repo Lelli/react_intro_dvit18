@@ -21,43 +21,38 @@ Lets take a look at the basic app that was generated for us. In `index.js`. The 
 ```js
 class App extends Component {
   constructor() {
-    super();
+    super()
     this.state = {
-      name: 'React'
-    };
+      name: 'React',
+    }
   }
 
   render() {
     return (
       <div>
         <Hello name={this.state.name} />
-        <p>
-          Start editing to see some magic happen :)
-        </p>
+        <p>Start editing to see some magic happen :)</p>
       </div>
-    );
+    )
   }
 }
 ```
 
 Our whole app starts with this file, and the render function is at the heart of it. Try modifying some text, save, and watch the app automatically show those changes!
 
-You might also have noticed that we have a unknown element inside our div, another component called <Hello> was also generated for us but lets ignore that for now (you can even remove that line from the code if you want).
+You might also have noticed that we have a unknown element inside our div, another component called `<Hello>` was also generated for us but lets ignore that for now (you can even remove that line from the code if you want).
 
 ## Part 1 - New component
 
-Now lets go ahead and make a new component, `WeatherDisplay`. Since this is an entirely new file we first have to import React and Component in the same way as in index.js, we also have to export the component in order to make it accessible from other files. The render function that we mentioned earlier is the heart of a component because it defines what will be displayed. For now, lets just display a `<h1>` HTML tag, with some text inside.
+Now lets go ahead and make a new component, `WeatherDisplay`. Since this is an entirely new file we first have to import React and Component in the same way as in index.js, we also have to export the component in order to make it accessible from other files. The render function, that we mentioned earlier, is the heart of a component because it defines what will be displayed. For now, lets just display a `<h1>` HTML tag, with some text inside.
 
 ```js
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 export default class WeatherDisplay extends Component {
   render() {
-    return (
-      <h1>Displaying weather for some city</h1>
-    );
+    return <h1>Displaying weather for some city</h1>
   }
 }
-
 ```
 
 Lets modify our App component (index.js) to use our new and shiny WeatherDisplay component.
@@ -67,9 +62,9 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <WeatherDisplay cityId={"12345"} />
+        <WeatherDisplay cityId={'12345'} />
       </div>
-    );
+    )
   }
 }
 ```
@@ -79,9 +74,7 @@ As you can see, we are passing data into `WeatherDisplay`. This data is a prop, 
 ```js
 export default class WeatherDisplay extends Component {
   render() {
-    return (
-      <h1>Displaying weather for city with id {this.props.cityId}</h1>
-    );
+    return <h1>Displaying weather for city with id {this.props.cityId}</h1>
   }
 }
 ```
@@ -92,13 +85,13 @@ Lets go back to our App component in index.js and near the top of the file, add 
 
 ```js
 const PLACES = [
-  { name: "Uppsala", id: "2666218" },
-  { name: "Stockholm", id: "2673722" },
-  { name: "Göteborg", id: "2711533" },
-  { name: "Lund", id: "2693678" },
-  { name: "Linköping", id: "2694759" },
-  { name: "Umeå", id: "602149" }
-];
+  { name: 'Uppsala', id: '2666218' },
+  { name: 'Stockholm', id: '2673722' },
+  { name: 'Göteborg', id: '2711533' },
+  { name: 'Lund', id: '2693678' },
+  { name: 'Linköping', id: '2694759' },
+  { name: 'Umeå', id: '602149' },
+]
 ```
 
 Now, upgrade the render function to iterate over each place, and render a `<button>` tag for it.
@@ -106,18 +99,19 @@ Now, upgrade the render function to iterate over each place, and render a `<butt
 ```js
 return (
   <div className="App">
-    <WeatherDisplay cityId={"12345"} />
+    <WeatherDisplay cityId={'12345'} />
     {PLACES.map((place, index) => (
       <button
         key={index}
         onClick={() => {
-          console.log('Clicked on index '+index);
-        }}>
-          {place.name}
+          console.log('Clicked on index ' + index)
+        }}
+      >
+        {place.name}
       </button>
     ))}
   </div>
-);
+)
 ```
 
 We are creating an array of clickable button-elements in the component, and the `key` prop is used to tell React the order of the elements in the array.
@@ -148,32 +142,56 @@ Let's use the `this.state` and `this.setState` in our App component:
 ```js
 class App extends Component {
   constructor() {
-    super();
+    super()
     this.state = {
       activePlace: 0,
-    };
+    }
   }
 
   render() {
-    const activePlace = this.state.activePlace;
+    const activePlace = this.state.activePlace
     return (
       <div>
         {PLACES.map((place, index) => (
           <button
             key={index}
             onClick={() => {
-              this.setState({ activePlace: index });
-          }}>
+              this.setState({ activePlace: index })
+            }}
+          >
             {place.name}
           </button>
         ))}
         <WeatherDisplay key={activePlace} cityId={PLACES[activePlace].id} />
       </div>
-    );
+    )
   }
 }
 ```
 
 ![Snapshot of the weather app with changing state](./images/with_state.png)
-
 At this point, [your `App.js` file should look something like this](./snapshots/part3_state/index.js).
+
+## Part 4 - Lifecycle Methods and Data Fetching
+
+Sometimes we want to add code that gets called at certain times in our component's lifetime. This is where the _lifecycle_ methods comes in to play.
+
+In this example, we want to make an API call when the component first shows up on screen, so we will add code to `componentDidMount`. Lets update the `WeatherDisplay` component to the following:
+
+**INSERT LIFECYCLE CODE HERE**
+
+At this point, [your `WeatherDisplay.js` file should look like this](./snapshots/part4_lifecycle_and_fetch/WeatherDisplay.js).
+
+And this should be the result ![Snapshot of the weather app with weather data loading](./images/part4_lifecycle.png)
+
+## Part 5 - Making it look better
+
+Lets organize that data a bit to make it more readable and more like a proper website.
+
+Edit the `render` function accordingly to make better use of that data.
+
+**INSERT NEW RENDER CODE HERE**
+
+![Snapshot of the weather app with weather data loading](./images/part5_json_data.png)
+
+At this point, [your `WeatherDisplay.js` file should look like this](./snapshots/part5_json_data/WeatherDisplay.js).
