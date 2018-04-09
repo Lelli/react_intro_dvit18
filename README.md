@@ -170,7 +170,7 @@ class App extends Component {
 ```
 
 ![Snapshot of the weather app with changing state](./images/with_state.png)
-At this point, [your `App.js` file should look something like this](./snapshots/part3_state/index.js).
+At this point, [your `index.js` file should look something like this](./snapshots/part3_state/index.js).
 
 ## Part 4 - Lifecycle Methods and Data Fetching
 
@@ -195,3 +195,67 @@ Edit the `render` function accordingly to make better use of that data.
 ![Snapshot of the weather app with weather data loading](./images/part5_json_data.png)
 
 At this point, [your `WeatherDisplay.js` file should look like this](./snapshots/part5_json_data/WeatherDisplay.js).
+
+# Part 6 - Making it look good (and adding a dependecy)!
+
+Our app is still somewhat ugly. We can fix that by styling everything with CSS or we can take a shortcut by installing a library called Bootstrap.
+
+[Bootstrap](http://getbootstrap.com/) is popular UI toolkit for HTML and CSS that allows us to easier build up responsive web-pages. Since we are using Stackblitz we have to install Bootstrap in a bit of a weird way so follow these steps;
+
+In the left-hand menu, right under the file tree you will find a section called Dependencies.
+In the field that reads "enter package name" we'll first enter, `react-bootstrap`. This will install a package that allows us to use bootstrap within our react components. In order to get this to work we will also have to update our already existing libraries. So go ahead and also enter the following package names: `react` and `react-dom`
+
+![Now your Dependencies section should look like this](./images/stackblitz_dependencies.png)
+
+
+Now in order to actually use the CSS from bootstrap we have to add a lines to our `index.html` as well;
+
+```html
+<!-- Import stylesheets from bootstrap -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+```
+
+Now that we have all the dependencies installed and bootstraps CSS imported we need to import the components we want to use from `react-bootstrap`. You can find all available components on the [react-bootstrap site](https://react-bootstrap.github.io/components.html).
+
+```js
+import { Navbar, NavItem, Nav, Grid, Row, Col } from "react-bootstrap";
+```
+
+Now, replace the App component's render function to use the bootstrap components:
+
+```js
+<div>
+  <Navbar>
+    <Navbar.Header>
+      <Navbar.Brand>
+        My Simple React Weather App
+      </Navbar.Brand>
+    </Navbar.Header>
+  </Navbar>
+  <Grid>
+    <Row>
+      <Col md={4} sm={4}>
+        <h3>Select a city</h3>
+        <Nav
+          bsStyle="pills"
+          stacked
+          activeKey={activePlace}
+          onSelect={index => {
+            this.setState({ activePlace: index });
+          }}
+        >
+          {PLACES.map((place, index) => (
+            <NavItem key={index} eventKey={index}>{place.name}</NavItem>
+          ))}
+        </Nav>
+      </Col>
+      <Col md={8} sm={8}>
+        <WeatherDisplay key={activePlace} cityId={PLACES[activePlace].id} />
+      </Col>
+    </Row>
+  </Grid>
+</div>
+```
+
+You should now be arriving at the final solution and have a fully functional, somewhat styled weather app!
+![Snapshot of the final app with Bootstrap components](./images/final.png)
