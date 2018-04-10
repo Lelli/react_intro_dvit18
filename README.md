@@ -176,27 +176,87 @@ At this point, [your `index.js` file should look something like this](./snapshot
 
 Sometimes we want to add code that gets called at certain times in our component's lifetime. This is where the _lifecycle_ methods comes in to play.
 
-In this example, we want to make an API call when the component first shows up on screen, so we will add code to `componentDidMount`. Lets update the `WeatherDisplay` component to the following:
+In this example, we want to make an API call when the component first shows up on screen, so we will add code to a method called `componentDidMount`. Lets add the following snippet to our `WeatherDisplay` component, just above the render method:
 
-**INSERT LIFECYCLE CODE HERE**
+```js
+componentDidMount() {
+  const cityId = this.props.cityId;
+  const URL = "https://api.openweathermap.org/data/2.5/weather?id=" + cityId + "&appid=a9541640d21304988f5a84de4bea6e50&units=metric"
+  fetch(URL).then(res => res.json()).then(json => {
+    console.log(json)
+  });
+}
+```
 
-At this point, [your `WeatherDisplay.js` file should look like this](./snapshots/part4_lifecycle_and_fetch/WeatherDisplay.js).
+As soon as the WeatherDisplay component is mounted (when you click a button WeatherDisplay is actually re-mounted), the `componentDidMount` function will run and we will do a request using `fetch` and get some data back which we log to the console.
+
+Now its time to actually do something with the data we receive. Lets start by adding a state to the WeatherDisplay component in the same way as we did with our first App component:
+
+```js
+constructor() {
+  super();
+  this.state = {
+    weatherData: null
+  };
+}
+```
+
+Now that we have a state in the component, we also want to change the state when we have fetched some data. Replace the `console.log(json)` function that you added before with the following:
+```js
+this.setState({ weatherData: json });
+```
+
+This will actually change the state of the component when we have fetched some data to display, but what will happen if the request fails or is slow? Then the weatherData field will be null which is less than ideal. Lets update our render method a bit to both handle this case and to display the data that we fetch:
+
+```js
+render() {
+  const weatherData = this.state.weatherData;
+  if (!weatherData) return <div>Loading...</div>;
+  return <div>
+  <h1>Displaying weather for city {this.props.cityId}</h1>
+  {JSON.stringify(weatherData)}
+  </div>;
+}
+```
+
+Now we are successfully fetching data and displaying what we receive in our app, at this point, [your `WeatherDisplay.js` file should look like this](./snapshots/part4_lifecycle_and_fetch/WeatherDisplay.js).
 
 And this should be the result ![Snapshot of the weather app with weather data loading](./images/part4_lifecycle.png)
 
-## Part 5 - Making it look better
+## Part 5 - Making it look OK
 
-Lets organize that data a bit to make it more readable and more like a proper website.
+Lets organize that data a bit to make it more readable and more like a proper website. If we look at the data we print out, this is a standard [JSON-object](https://en.wikipedia.org/wiki/JSON) and it looks something like this:
 
-Edit the `render` function accordingly to make better use of that data.
+```JSON
+{"coord":{"lon":17.75,"lat":60},"weather":[{"id":800,"main":"Clear","description":"clear sky","icon":"01d"}],"base":"stations","main":{"temp":0.6,"pressure":1038.33,"humidity":63,"temp_min":0.6,"temp_max":0.6,"sea_level":1041.65,"grnd_level":1038.33},"wind":{"speed":2.51,"deg":38.5049},"clouds":{"all":0},"dt":1523382220,"sys":{"message":0.0025,"country":"SE","sunrise":1523331934,"sunset":1523382976},"id":2666218,"name":"Uppsala Län","cod":200}
+```
 
-**INSERT NEW RENDER CODE HERE**
+This JSON is actually what we right now set our state to and have put into the variable `weatherData` inside our render method. We want to use only the information that lies within the `weather`-part of the object and can therefore add `const weather = weatherData.weather[0];` to our render method to make the code easier to follow.
+
+Now that we have all data we want to use conveniently stored in our `weather` variable, lets go ahead and edit the `render` function some more to make better use of that data.
+
+```js
+const weather = weatherData.weather[0];
+const iconUrl = "https://openweathermap.org/img/w/" + weather.icon + ".png";
+return (
+  <div>
+    <h1>
+      {weather.main} in {weatherData.name}
+      <img src={iconUrl} alt={weatherData.description} />
+    </h1>
+    <p>Current: {weatherData.main.temp}°</p>
+    <p>Highest: {weatherData.main.temp_max}°</p>
+    <p>Lowest: {weatherData.main.temp_min}°</p>
+    <p>Wind Speed: {weatherData.wind.speed} mi/hr</p>
+  </div>
+);
+```
 
 ![Snapshot of the weather app with weather data loading](./images/part5_json_data.png)
 
 At this point, [your `WeatherDisplay.js` file should look like this](./snapshots/part5_json_data/WeatherDisplay.js).
 
-# Part 6 - Making it look good (and adding a dependecy)!
+# Part 6 - Making it look better (and adding a dependecy)!
 
 Our app is still somewhat ugly. We can fix that by styling everything with CSS or we can take a shortcut by installing a library called Bootstrap.
 
