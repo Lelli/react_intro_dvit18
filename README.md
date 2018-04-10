@@ -62,6 +62,24 @@ class App extends Component {
   render() {
     return (
       <div className="App">
+        <WeatherDisplay />
+      </div>
+    )
+  }
+}
+```
+
+You should now see the text you wrote inside the WeatherDisplay component appear in the preview window. You now have two components, one nested within the other!
+
+## Part 2.1 - Passing down props
+
+In order to make our WeatherDisplay component a bit more useful we can give it some more information about what we want it to display. In this case we might want to pass down information about which `cityId` we want information for, lets start with a fake one.
+
+```js
+class App extends Component {
+  render() {
+    return (
+      <div className="App">
         <WeatherDisplay cityId={'12345'} />
       </div>
     )
@@ -69,7 +87,7 @@ class App extends Component {
 }
 ```
 
-As you can see, we are passing data into `WeatherDisplay`. This data is a prop, called "cityId". We can modify our component to display the data being passed in:
+As you can see, we now added some information to the line where we use the `WeatherDisplay` component. This data is a prop named "cityId". In order to make use of this data that is now sent down to WeatherDisplay, we can modify our `WeatherDisplay`-components render method to display the data being passed in:
 
 ```js
 export default class WeatherDisplay extends Component {
@@ -79,8 +97,7 @@ export default class WeatherDisplay extends Component {
 }
 ```
 
-## Part 2 - Passing down props
-
+## Part 2.2 - Passing down props
 Lets go back to our App component in index.js and near the top of the file, add some different places that we might want to display weather for:
 
 ```js
@@ -95,6 +112,7 @@ const PLACES = [
 ```
 
 Now, upgrade the render function to iterate over each place, and render a `<button>` tag for it.
+The brackets you see around `{PLACES.map()}` tells React to run this code before actually rendering anything, so in the case below we will go through each item in the `PLACES` array and for every `place` we will create a button.
 
 ```js
 return (
@@ -114,9 +132,9 @@ return (
 )
 ```
 
-We are creating an array of clickable button-elements in the component, and the `key` prop is used to tell React the order of the elements in the array.
+As mentioned briefly above, we are creating an array of clickable button-elements in the component and then rendering that, the `key` prop is used to tell React the order of the elements in the array.
 
-There is also an `onClick` event handler, where we log the click to the console. You can see the log statements by opening the "Developer Tools" in your browser (or press "Console" in the bottom of the preview window). Your app should now look like this:
+There is also an `onClick` event handler for each button, where we log any click to the console. You can see the log statements by opening the "Developer Tools" in your browser (or press "Console" in the bottom of the preview window). Your app should now look like this:
 
 ![Snapshot of the app with props](./images/with_props.png)
 
