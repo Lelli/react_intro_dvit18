@@ -58,6 +58,7 @@ export default class WeatherDisplay extends Component {
 Lets modify our App component (index.js) to use our new and shiny WeatherDisplay component.
 
 ```js
+import WeatherDisplay from './WeatherDisplay';
 class App extends Component {
   render() {
     return (
