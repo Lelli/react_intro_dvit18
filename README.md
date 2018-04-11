@@ -98,7 +98,7 @@ export default class WeatherDisplay extends Component {
 ```
 
 ## Part 2.2 - Passing down props
-Lets go back to our App component in index.js and near the top of the file, add some different places that we might want to display weather for:
+Lets go back to our App component in App.js and near the top of the file, after render() but before return (). Add some different places that we might want to display weather for:
 
 ```js
 const PLACES = [
